@@ -1,6 +1,11 @@
 import requests
+import os
+from dotenv import load_dotenv
 
-MY_API_KEY = 'da5324df0dddcd4be49d5e59233a1e5a'
+#Get config files
+load_dotenv()
+MY_API_KEY = os.getenv("MY_API_KEY")
+
 current_search_results = None
 
 def get_geo_data(cityname, limit):
