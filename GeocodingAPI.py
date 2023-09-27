@@ -39,13 +39,3 @@ def get_longitude(index = 0):
          return current_search_results[index]["lon"]
     else:
          return None
-    
-success = get_geo_data("London", 5)
-results = get_city_search_results()
-lat = get_latitude()
-long = get_longitude()
-
-print(success)
-print(results)
-print(lat)
-print(long)
