@@ -13,7 +13,7 @@ def get_geo_data(cityname, limit):
         response = requests.get(f"http://api.openweathermap.org/geo/1.0/direct?q={cityname}&limit={limit}&appid={MY_API_KEY}")
         if response.status_code == 200:
             current_search_results = response.json()
-            return "Fetch successful!"
+            return current_search_results
         else:
             print(f"Hello, there's a {response.status_code} error with your request")
             return f"Fetch unsuccessful, returned error {response.status_code}."

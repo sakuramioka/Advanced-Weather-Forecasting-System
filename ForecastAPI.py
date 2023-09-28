@@ -10,11 +10,7 @@ def get_forecast(latitude, longitude, hourly_parameters, time_mode):
         response = requests.get(f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&hourly={hourly_parameters}&timezone={time_mode}")
         if response.status_code == 200:
             current_weather_results = response.json()
-            return "Fetch successful!"
+            return current_weather_results
         else:
             print(f"Hello, there's a {response.status_code} error with your request")
             return f"Fetch unsuccessful, returned error {response.status_code}."
-        
-
-get_forecast(lat,lon,'temperature_2m','auto')
-print(current_weather_results)
