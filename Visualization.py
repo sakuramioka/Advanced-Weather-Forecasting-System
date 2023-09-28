@@ -12,25 +12,6 @@ longitude = GeocodingAPI.get_longitude()
 
 data = ForecastAPI.get_forecast(latitude,longitude,'temperature_2m','auto')
 
-"""data = {
-    'latitude': 11.0,
-    'longitude': 77.0,
-    'generationtime_ms': 0.02002716064453125,
-    'utc_offset_seconds': 19800,
-    'timezone': 'Asia/Kolkata',
-    'timezone_abbreviation': 'IST',
-    'elevation': 421.0,
-    'hourly_units': {'time': 'iso8601', 'temperature_2m': '°C'},
-    'hourly': {
-        'time': [
-            timelist
-        ],
-        'temperature_2m': [
-            templist
-        ]
-    }
-} """
-
 curdoc().theme = 'dark_minimal'
 
 # Extract timestamps and temperatures
