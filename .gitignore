@@ -1,3 +1,4 @@
 .env
 __pycache__/ForecastAPI.cpython-310.pyc
 __pycache__/GeocodingAPI.cpython-310.pyc
+__pycache__/Visualization.cpython-310.pyc

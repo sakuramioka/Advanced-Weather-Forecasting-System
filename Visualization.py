@@ -1,4 +1,4 @@
-from bokeh.plotting import figure, output_file, show, curdoc
+from bokeh.plotting import figure, show, curdoc
 from bokeh.models import DatetimeTickFormatter, HoverTool
 from datetime import datetime
 import pandas as pd
