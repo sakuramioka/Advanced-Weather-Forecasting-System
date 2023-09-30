@@ -5,7 +5,7 @@ import pandas as pd
 import GeocodingAPI
 import ForecastAPI
 
-current_search_results = GeocodingAPI.get_geo_data("Antarctica", 1)
+current_search_results = GeocodingAPI.get_geo_data("New York", 1)
 city = GeocodingAPI.get_city_search_results()[0]
 latitude = GeocodingAPI.get_latitude()
 longitude = GeocodingAPI.get_longitude()
@@ -25,7 +25,7 @@ timestamps = [datetime.fromisoformat(timestamp) for timestamp in timestamps]
 df = pd.DataFrame({'timestamps': timestamps, 'temperatures': temperatures})
 
 # Output to an HTML file (optional)
-output_file("temperature_plot.html")
+# output_file("temperature_plot.html")
 
 # Create a Bokeh figure
 p = figure(
