@@ -12,7 +12,7 @@ root.attributes('-fullscreen', True)
 
 # Load and resize the background image to fit the window
 background_image = Image.open("images//bg.jpg")  # Replace with your image path
-background_image = background_image.resize((1920, 1080), Image.ANTIALIAS)
+background_image = background_image.resize((1920, 1080), Image.Resampling.LANCZOS)
 background_photo = ImageTk.PhotoImage(background_image)
 
 # Create a canvas for the background image
@@ -22,12 +22,23 @@ canvas.pack()
 # Set the background image on the canvas
 canvas.create_image(0, 0, anchor=tk.NW, image=background_photo)
 
+def try_destroying(element):
+    try:
+        element.destroy()
+    except Exception:
+        pass
+
 def display_results(latitude, longitude):
-    info_text = canvas.create_text(root.winfo_screenwidth/2, root.winfo_screenheight/2, anchor=tk.NW, text="Please wait... fetching information!",
-                                   font=('Century Gothic', '15', 'bold'))
+    info_text = canvas.create_text(root.winfo_screenwidth()/2, root.winfo_screenheight()/2, anchor=tk.N, text="Please wait... fetching information!",
+                                   font=('Century Gothic', '20', 'bold'), fill='white', tags='info_text')
     data = ForecastAPI.get_forecast(latitude,longitude,'temperature_2m','auto')
 
+result_list = None
+result_data = None
+selected_index = None
+
 def callback(event):
+    global selected_index
     curtext = entry.get()
     selection = event.widget.curselection()
     if selection:
@@ -35,20 +46,34 @@ def callback(event):
         data = event.widget.get(index)
         entry.delete(0, tk.END)
         entry.insert(0, data)
+        selected_index = index
     else:
         entry.delete(0, tk.END)
         entry.insert(0, curtext)
 
-result_list = None
+
 def search_results():
+
     global result_list
+    global result_data
+    global selected_index
+
     keywd = entry.get()  
     try:
         canvas.delete('info_text')
         result_list.destroy()
     except Exception:
         pass
-    GeocodingAPI.get_geo_data(keywd, 6)
+        
+    result_data = GeocodingAPI.get_geo_data(keywd, 6)
+
+    if selected_index !=  None:
+        latitude = GeocodingAPI.get_latitude(selected_index)
+        longitude = GeocodingAPI.get_longitude(selected_index)
+        display_results(latitude, longitude)
+        selected_index = None
+        return None
+    
     list_items = GeocodingAPI.get_city_search_results()
     var = tk.Variable(value=list_items)
     result_list = tk.Listbox(canvas, listvariable=var, justify='center', font=('Century Gothic', '15'), selectbackground='#87ceeb', selectforeground='#000000', highlightthickness=0)
