@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import PhotoImage, LabelFrame
 from PIL import Image, ImageTk
+import time
 import GeocodingAPI
 import ForecastAPI
 
@@ -36,13 +37,17 @@ def display_results(latitude, longitude):
     x1, y1 = 217, root.winfo_screenheight() - 17
     padx = 17
     days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
+    current_day_index =days.index(str(time.strftime('%A')).upper())
     for i in range(1,8):
+        if current_day_index >= 7:
+            current_day_index = current_day_index - 7
         canvas.create_rectangle(x0,y0,x1,y1,fill='white',outline='white', tags='existing')
         canvas.create_rectangle(x0,y0,x1,y0+50, fill='pink', outline='pink', tags='existing')
-        canvas.create_text((x1+x0)/2, (root.winfo_screenheight()/2 - 45), text=days[i-1], anchor=tk.N, justify='center',
+        canvas.create_text((x1+x0)/2, (root.winfo_screenheight()/2 - 45), text=days[current_day_index], anchor=tk.N, justify='center',
                            font=('Dubai', '20', 'bold'), fill='white', tags='existing')
         x0 = x0 + 200 + padx
         x1 = x1 + 200 + padx
+        current_day_index = current_day_index+1
     print(x0,y0,x1,y1)
 
 result_list = None
