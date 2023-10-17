@@ -10,7 +10,7 @@ city = GeocodingAPI.get_city_search_results()[0]
 latitude = GeocodingAPI.get_latitude()
 longitude = GeocodingAPI.get_longitude()
 
-data = ForecastAPI.get_forecast(latitude,longitude,'temperature_2m','auto')
+data = ForecastAPI.get_forecast(latitude,longitude,'temperature_2m','weathercode','auto')
 
 curdoc().theme = 'dark_minimal'
 

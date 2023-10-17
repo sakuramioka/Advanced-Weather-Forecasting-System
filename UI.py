@@ -5,6 +5,38 @@ import time
 import GeocodingAPI
 import ForecastAPI
 
+wmo_codes = {
+  # Index : [Name, type]
+    0:['Clear sky', 'clear'],
+    1:['Mainly clear', 'clear'],
+    2:['Partly cloudy', 'cloudy'],
+    3:['Overcast', 'overcast'],
+    45:['Fog', 'fog'],
+    48:['Rime fog', 'rime_fog'],
+    51:['Light drizzle','drizzle'],
+    53:['Moderate drizzle', 'drizzle'],
+    55:['Dense drizzle', 'drizzle'],
+    56:['Light, freezing drizzle', 'freezing_drizzle'],
+    57:['Dense, freezing drizzle', 'freezing_drizzle'],
+    61:['Slight rain', 'rain'],
+    63:['Moderate rain', 'rain'],
+    65:['Heavy rain', 'rain'],
+    66:['Freezing light rain', 'freezing_rain'],
+    67:['Freezing heavy rain', 'freezing_rain'],
+    71:['Slight snow fall', 'snow'],
+    73:['Moderate snow fall', 'snow'],
+    75:['Heavy snow fall', 'snow'],
+    77:['Snow grains', 'snow'],
+    80:['Slight rain showers', 'rain'],
+    81:['Moderate rain showers', 'rain'],
+    82:['Violent rain showers', 'rain'],
+    85:['Slight snow showers', 'snow'],
+    86:['Heavy snow showers', 'snow'],
+    95:['Thunderstorm', 'thunder'],
+    96:['Slight hailstorm', 'hail'],
+    99:['Heavy hailstorm', 'hail']
+}
+
 # Create the main window
 root = tk.Tk()
 root.title("Weather Forecasting Application")
@@ -29,10 +61,13 @@ def try_destroying(element):
     except Exception:
         pass
 
+images = []
 def display_results(latitude, longitude):
+    global images
+    images.clear()
     canvas.delete('info_text')
     canvas.delete('existing')
-    data = ForecastAPI.get_forecast(latitude,longitude,'temperature_2m','auto')
+    data = ForecastAPI.get_forecast(latitude,longitude,'temperature_2m','weathercode','auto')
     x0, y0 = 17, root.winfo_screenheight()/2 - 50
     x1, y1 = 217, root.winfo_screenheight() - 17
     padx = 17
@@ -45,11 +80,28 @@ def display_results(latitude, longitude):
         canvas.create_rectangle(x0,y0,x1,y0+50, fill='pink', outline='pink', tags='existing')
         canvas.create_text((x1+x0)/2, (root.winfo_screenheight()/2 - 45), text=days[current_day_index], anchor=tk.N, justify='center',
                            font=('Dubai', '20', 'bold'), fill='white', tags='existing')
+        if i == 1:
+            canvas.create_text((x1+x0)/2, (root.winfo_screenheight() - 50), text='TODAY', anchor=tk.N, justify='center',
+                           font=('Dubai', '15', 'bold'), fill='grey', tags='existing')
+        else:
+            date = data['daily']['time'][i-1]
+            canvas.create_text((x1+x0)/2, (root.winfo_screenheight() - 50), text=date, anchor=tk.N, justify='center',
+                           font=('Dubai', '15', 'bold'), fill='grey', tags='existing')
+            
+        weathercode = data['daily']['weathercode'][i-1]
+        icon = Image.open(f"images\\icons\\{wmo_codes[weathercode][1]}.png")
+        icon = icon.resize((160,160), Image.Resampling.LANCZOS)
+        icon = ImageTk.PhotoImage(icon)
+        images.append(icon)
+        canvas.create_image(x0+20, y0+60, image=icon, anchor = tk.NW)
+
+        canvas.create_text((x1+x0)/2, y0+240, text=wmo_codes[weathercode][0], anchor=tk.N, justify='center',
+                           font=('Dubai', '15'), fill='black', tags='existing')
+        
         x0 = x0 + 200 + padx
         x1 = x1 + 200 + padx
         current_day_index = current_day_index+1
-    print(x0,y0,x1,y1)
-
+        
 result_list = None
 result_data = None
 selected_index = None
