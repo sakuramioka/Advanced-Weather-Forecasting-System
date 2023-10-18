@@ -67,7 +67,7 @@ def display_results(latitude, longitude):
     images.clear()
     canvas.delete('info_text')
     canvas.delete('existing')
-    data = ForecastAPI.get_forecast(latitude,longitude,'temperature_2m','weathercode','auto')
+    data = ForecastAPI.get_forecast(latitude,longitude,'temperature_2m','weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max','auto')
     x0, y0 = 17, root.winfo_screenheight()/2 - 50
     x1, y1 = 217, root.winfo_screenheight() - 17
     padx = 17
@@ -78,15 +78,16 @@ def display_results(latitude, longitude):
             current_day_index = current_day_index - 7
         canvas.create_rectangle(x0,y0,x1,y1,fill='white',outline='white', tags='existing')
         canvas.create_rectangle(x0,y0,x1,y0+50, fill='pink', outline='pink', tags='existing')
+        canvas.create_rectangle(x1,y1,x0,y1-35, fill='skyblue', outline='skyblue', tags='existing')
         canvas.create_text((x1+x0)/2, (root.winfo_screenheight()/2 - 45), text=days[current_day_index], anchor=tk.N, justify='center',
                            font=('Dubai', '20', 'bold'), fill='white', tags='existing')
         if i == 1:
             canvas.create_text((x1+x0)/2, (root.winfo_screenheight() - 50), text='TODAY', anchor=tk.N, justify='center',
-                           font=('Dubai', '15', 'bold'), fill='grey', tags='existing')
+                           font=('Dubai', '15', 'bold'), fill='white', tags='existing')
         else:
             date = data['daily']['time'][i-1]
             canvas.create_text((x1+x0)/2, (root.winfo_screenheight() - 50), text=date, anchor=tk.N, justify='center',
-                           font=('Dubai', '15', 'bold'), fill='grey', tags='existing')
+                           font=('Dubai', '15', 'bold'), fill='white', tags='existing')
             
         weathercode = data['daily']['weathercode'][i-1]
         icon = Image.open(f"images\\icons\\{wmo_codes[weathercode][1]}.png")
@@ -96,8 +97,20 @@ def display_results(latitude, longitude):
         canvas.create_image(x0+20, y0+60, image=icon, anchor = tk.NW)
 
         canvas.create_text((x1+x0)/2, y0+240, text=wmo_codes[weathercode][0], anchor=tk.N, justify='center',
-                           font=('Dubai', '15'), fill='black', tags='existing')
-        
+                           font=('Dubai', '15', 'bold'), fill='black', tags='existing')
+        canvas.create_text((x1+x0)/2 - 20, y0+280, text="""MAX TEMP:
+MIN TEMP:
+SUNRISE:
+SUNSET:
+CHANCE OF RAIN:""", 
+                        anchor=tk.N, justify='left', font=('Dubai', '13', 'bold'), fill='grey', tags='existing')
+        canvas.create_text((x1+x0)/2 + 65, y0+280, 
+text=f"""{data['daily']['temperature_2m_max'][i-1]}°C
+{data['daily']['temperature_2m_min'][i-1]}°C
+{data['daily']['sunrise'][i-1][-5:]}
+{data['daily']['sunset'][i-1][-5:]}
+{data['daily']['precipitation_probability_max'][i-1]}%""", 
+                        anchor=tk.N, justify='right', font=('Dubai', '13', 'bold'), fill='black', tags='existing')
         x0 = x0 + 200 + padx
         x1 = x1 + 200 + padx
         current_day_index = current_day_index+1
