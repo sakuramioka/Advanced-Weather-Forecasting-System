@@ -97,7 +97,7 @@ def display_results(latitude, longitude):
         canvas.create_image(x0+20, y0+60, image=icon, anchor = tk.NW)
 
         canvas.create_text((x1+x0)/2, y0+240, text=wmo_codes[weathercode][0], anchor=tk.N, justify='center',
-                           font=('Dubai', '15', 'bold'), fill='black', tags='existing')
+                           font=('Dubai', '15'), fill='black', tags='existing')
         canvas.create_text((x1+x0)/2 - 20, y0+280, text="""MAX TEMP:
 MIN TEMP:
 SUNRISE:
