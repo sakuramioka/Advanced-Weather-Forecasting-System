@@ -5,6 +5,8 @@ import time
 import GeocodingAPI
 import ForecastAPI
 
+y_alignment = 60
+
 wmo_codes = {
   # Index : [Name, type]
     0:['Clear sky', 'clear'],
@@ -73,13 +75,17 @@ def display_results(latitude, longitude):
     padx = 17
     days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
     current_day_index =days.index(str(time.strftime('%A')).upper())
+    canvas.create_text(root.winfo_screenwidth()//2, 325, text=f"{str(data['latitude'])[:5]}°N {str(data['longitude'])[:5]}°E, {data['elevation']}m above sea level",
+                       font=('Dubai', '18', 'bold'), fill='black', tags='info_text')
+    canvas.create_text(root.winfo_screenwidth()//2, 350, text=f"Generated in {str(data['generationtime_ms'])[:5]}ms, time in {data['timezone_abbreviation']} [{data['timezone']}]",
+                       font=('Dubai', '14'), fill='black', tags='info_text')
     for i in range(1,8):
         if current_day_index >= 7:
             current_day_index = current_day_index - 7
         canvas.create_rectangle(x0,y0,x1,y1,fill='white',outline='white', tags='existing')
         canvas.create_rectangle(x0,y0,x1,y0+50, fill='pink', outline='pink', tags='existing')
         canvas.create_rectangle(x1,y1,x0,y1-35, fill='skyblue', outline='skyblue', tags='existing')
-        canvas.create_text((x1+x0)/2, (root.winfo_screenheight()/2 - 45), text=days[current_day_index], anchor=tk.N, justify='center',
+        canvas.create_text((x1+x0)/2, (root.winfo_screenheight()//2 - 45), text=days[current_day_index], anchor=tk.N, justify='center',
                            font=('Dubai', '20', 'bold'), fill='white', tags='existing')
         if i == 1:
             canvas.create_text((x1+x0)/2, (root.winfo_screenheight() - 50), text='TODAY', anchor=tk.N, justify='center',
@@ -98,19 +104,19 @@ def display_results(latitude, longitude):
 
         canvas.create_text((x1+x0)/2, y0+240, text=wmo_codes[weathercode][0], anchor=tk.N, justify='center',
                            font=('Dubai', '15'), fill='black', tags='existing')
-        canvas.create_text((x1+x0)/2 - 20, y0+280, text="""MAX TEMP:
+        canvas.create_text((x1+x0)/2 - 25, y0+280, text="""MAX TEMP:
 MIN TEMP:
 SUNRISE:
 SUNSET:
 CHANCE OF RAIN:""", 
-                        anchor=tk.N, justify='left', font=('Dubai', '13', 'bold'), fill='grey', tags='existing')
+                        anchor=tk.N, justify='left', font=('Dubai', '11', 'bold'), fill='grey', tags='existing')
         canvas.create_text((x1+x0)/2 + 65, y0+280, 
 text=f"""{data['daily']['temperature_2m_max'][i-1]}°C
 {data['daily']['temperature_2m_min'][i-1]}°C
 {data['daily']['sunrise'][i-1][-5:]}
 {data['daily']['sunset'][i-1][-5:]}
 {data['daily']['precipitation_probability_max'][i-1]}%""", 
-                        anchor=tk.N, justify='right', font=('Dubai', '13', 'bold'), fill='black', tags='existing')
+                        anchor=tk.N, justify='right', font=('Dubai', '11', 'bold'), fill='black', tags='existing')
         x0 = x0 + 200 + padx
         x1 = x1 + 200 + padx
         current_day_index = current_day_index+1
@@ -160,9 +166,9 @@ def search_results():
     list_items = GeocodingAPI.get_city_search_results()
     var = tk.Variable(value=list_items)
     result_list = tk.Listbox(canvas, listvariable=var, justify='center', font=('Century Gothic', '15'), selectbackground='#87ceeb', selectforeground='#000000', highlightthickness=0)
-    result_list.place(x=(root.winfo_screenwidth() - 600) // 2 - 30, y=360, width=600, height=len(list_items*24))
+    result_list.place(x=(root.winfo_screenwidth() - 600) // 2 - 30, y=360 - y_alignment, width=600, height=len(list_items*24))
     result_list.bind("<<ListboxSelect>>", callback)
-    canvas.create_text((root.winfo_screenwidth())// 2 - 30, 365+len(list_items*24), font=('Century Gothic', '15', 'bold'), text=f"Your query produced {len(list_items)} results!", anchor=tk.NE
+    canvas.create_text((root.winfo_screenwidth())// 2 - 30, 365+len(list_items*24) - y_alignment, font=('Century Gothic', '15', 'bold'), text=f"Your query produced {len(list_items)} results!", anchor=tk.NE
                        ,tags='info_text')
 
 # Function to clear the default text when clicked
@@ -192,9 +198,9 @@ canvas.create_image((root.winfo_screenwidth() - top_image_width) // 2, y_spacing
 
 entry = tk.Entry(canvas, width=40, font=('Century Gothic', 20), relief='flat', justify='center')
 entry.insert(0, "Enter a city name")
-entry.place(x=(root.winfo_screenwidth() - 600) // 2 - 30, y=300, width=600, height=60)
+entry.place(x=(root.winfo_screenwidth() - 600) // 2 - 30, y=300 - y_alignment, width=600, height=60)
 search_button = tk.Button(canvas, text="🔎", width=4, height=1, font=('Century Gothic', 20), relief='flat', command=search_results)
-search_button.place(x=(root.winfo_screenwidth() - 600) // 2 + 570, y=300, width=60, height=60)
+search_button.place(x=(root.winfo_screenwidth() - 600) // 2 + 570, y=300 - y_alignment, width=60, height=60)
 
 # Bind the click event to clear the default text
 entry.bind("<Button-1>", clear_default_text)
