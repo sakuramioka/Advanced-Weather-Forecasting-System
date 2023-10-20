@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 import time
 import GeocodingAPI
 import ForecastAPI
+import Visualization
 
 y_alignment = 60
 
@@ -64,6 +65,7 @@ def try_destroying(element):
         pass
 
 images = []
+weathe
 def display_results(latitude, longitude):
     global images
     images.clear()
@@ -117,6 +119,9 @@ text=f"""{data['daily']['temperature_2m_max'][i-1]}°C
 {data['daily']['sunset'][i-1][-5:]}
 {data['daily']['precipitation_probability_max'][i-1]}%""", 
                         anchor=tk.N, justify='right', font=('Dubai', '11', 'bold'), fill='black', tags='existing')
+        
+        graph_button = tk.Button(canvas, text="Display temperature graph", width=4, height=1, font=('Dubai', '14'), relief='flat', command=Visualization.display_graph(data))
+        graph_button.place(x=(root.winfo_screenwidth() - 300)// 2, y= root.winfo_screenheight() - 30, width=300, height=23)
         x0 = x0 + 200 + padx
         x1 = x1 + 200 + padx
         current_day_index = current_day_index+1
