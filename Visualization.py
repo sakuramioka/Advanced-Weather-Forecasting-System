@@ -2,12 +2,10 @@ from bokeh.plotting import figure, show, curdoc
 from bokeh.models import DatetimeTickFormatter, HoverTool
 from datetime import datetime
 import pandas as pd
-import UI
 
-def display_graph():
+curdoc().theme = 'dark_minimal'
 
-    data = UI.data
-    curdoc().theme = 'dark_minimal'
+def display_graph(data, city):
 
     # Extract timestamps and temperatures
     timestamps = data['hourly']['time']

@@ -65,13 +65,16 @@ def try_destroying(element):
         pass
 
 images = []
-weathe
+weather_data = None
+
 def display_results(latitude, longitude):
+    global weather_data
     global images
     images.clear()
     canvas.delete('info_text')
     canvas.delete('existing')
     data = ForecastAPI.get_forecast(latitude,longitude,'temperature_2m','weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max','auto')
+    weather_data = data
     x0, y0 = 17, root.winfo_screenheight()/2 - 50
     x1, y1 = 217, root.winfo_screenheight() - 37
     padx = 17
@@ -120,7 +123,7 @@ text=f"""{data['daily']['temperature_2m_max'][i-1]}°C
 {data['daily']['precipitation_probability_max'][i-1]}%""", 
                         anchor=tk.N, justify='right', font=('Dubai', '11', 'bold'), fill='black', tags='existing')
         
-        graph_button = tk.Button(canvas, text="Display temperature graph", width=4, height=1, font=('Dubai', '14'), relief='flat', command=Visualization.display_graph(data))
+        graph_button = tk.Button(canvas, text="Display temperature graph", width=4, height=1, font=('Dubai', '14'), relief='flat', command=display_graph)
         graph_button.place(x=(root.winfo_screenwidth() - 300)// 2, y= root.winfo_screenheight() - 30, width=300, height=23)
         x0 = x0 + 200 + padx
         x1 = x1 + 200 + padx
@@ -129,14 +132,17 @@ text=f"""{data['daily']['temperature_2m_max'][i-1]}°C
 result_list = None
 result_data = None
 selected_index = None
+city = ''
 
 def callback(event):
     global selected_index
+    global city
     curtext = entry.get()
     selection = event.widget.curselection()
     if selection:
         index = selection[0]
         data = event.widget.get(index)
+        city = data
         entry.delete(0, tk.END)
         entry.insert(0, data)
         selected_index = index
@@ -175,11 +181,15 @@ def search_results():
     result_list.bind("<<ListboxSelect>>", callback)
     canvas.create_text((root.winfo_screenwidth())// 2 - 30, 365+len(list_items*24) - y_alignment, font=('Century Gothic', '15', 'bold'), text=f"Your query produced {len(list_items)} results!", anchor=tk.NE
                        ,tags='info_text')
+    
+def display_graph():
+    Visualization.display_graph(weather_data, city)
 
 # Function to clear the default text when clicked
 def clear_default_text(event):
     if entry.get() == "Enter a city name":
         entry.delete(0, tk.END)
+
 
 x_spacing = 70
 y_spacing = 5
