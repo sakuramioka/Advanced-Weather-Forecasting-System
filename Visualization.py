@@ -23,7 +23,7 @@ def display_graph(data, city):
     # Create a Bokeh figure
     p = figure(
         x_axis_type="datetime",
-        title=f"Temperature data for {city}, Timezone: {data['timezone_abbreviation']} - {data['timezone']}, Generation Time: {data['generationtime_ms']}",
+        title=f"Temperature data for {city}, Timezone: {data['timezone_abbreviation']} - {data['timezone']}, Generation Time: {data['generationtime_ms']}ms",
         x_axis_label="Date",
         y_axis_label="Temperature (°C)",
         width=1495,

@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import PhotoImage, LabelFrame
 from PIL import Image, ImageTk
 import time
 import GeocodingAPI
@@ -52,7 +51,7 @@ background_image = background_image.resize((1920, 1080), Image.Resampling.LANCZO
 background_photo = ImageTk.PhotoImage(background_image)
 
 # Create a canvas for the background image
-canvas = tk.Canvas(root, width=1920, height=1080)
+canvas = tk.Canvas(root, width=1920, height=1080, highlightthickness=0)
 canvas.pack()
 
 # Set the background image on the canvas
