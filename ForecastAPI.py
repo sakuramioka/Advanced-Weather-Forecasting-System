@@ -20,4 +20,4 @@ def check_internet_connection():
         response = requests.get("https://open-meteo.com", timeout=5)
         return True
     except requests.ConnectionError:
-        return False    
+        return False
