@@ -14,3 +14,10 @@ def get_forecast(latitude, longitude, hourly_parameters='temperature_2m', daily_
         else:
             print(f"Hello, there's a {response.status_code} error with your request")
             return f"Fetch unsuccessful, returned error {response.status_code}."
+
+def check_internet_connection():
+    try:
+        response = requests.get("https://open-meteo.com", timeout=5)
+        return True
+    except requests.ConnectionError:
+        return False    
